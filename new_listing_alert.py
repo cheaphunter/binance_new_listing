@@ -2,8 +2,15 @@ import json
 from binance.client import Client
 import keys
 import datetime as dt
+import smtplib, ssl
+import other
+
+### python email tutorial: https://realpython.com/python-send-email/
 
 client = Client(api_key=keys.Pkey, api_secret=keys.Skey)
+port = 465  # For SSL
+sender = 'ross.c.dev@gmail.com'
+receiver = 'ross_coates82@hotmail.com'
 
 def get_pairs(quote):
 
@@ -54,3 +61,9 @@ if new_listings:
         now = dt.now()
         logstring = f'{now.strftime("%X %x")} {new_listings}\n'
         n.write(logstring)
+
+        # Create a secure SSL context
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login("ross.c.dev@gmail.com", other.pw)
+            server.sendmail(sender, receiver, logstring)
