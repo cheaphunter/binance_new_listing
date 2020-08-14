@@ -8,6 +8,7 @@ import other
 ### python email tutorial: https://realpython.com/python-send-email/
 
 client = Client(api_key=keys.Pkey, api_secret=keys.Skey)
+now = dt.datetime.now()
 
 def get_all_pairs(quote):
 
@@ -22,7 +23,7 @@ def get_all_pairs(quote):
 
     return pairs_list
 
-def compare_and_report():
+def compare_and_report(now):
     port = 465  # For SSL
     sender = 'ross.c.dev@gmail.com'
     receiver = 'ross_coates82@hotmail.com'
@@ -60,7 +61,6 @@ def compare_and_report():
     if new_listings:
         print(new_listings)
         with open('new_listings.txt', 'a') as n:
-            now = dt.now()
             logstring = f'{now.strftime("%X %x")} {new_listings}\n'
             n.write(logstring)
 
@@ -69,3 +69,5 @@ def compare_and_report():
             with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
                 server.login("ross.c.dev@gmail.com", other.pw)
                 server.sendmail(sender, receiver, logstring)
+
+compare_and_report(now)
